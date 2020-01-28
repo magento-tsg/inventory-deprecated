@@ -64,6 +64,10 @@
             <actionGroup ref="DisableSourceActionGroup" stepKey="disableSource" before="amOnLogoutPage">
                 <argument name="sourceCode" value="$source.source[source_code]$"/>
             </actionGroup>
+
+            <!-- Reindex invalidated indices after product attribute has been created/deleted -->
+            <magentoCLI command="cron:run" arguments="--group='index'" stepKey="firstRunToScheduleJobs"/>
+            <magentoCLI command="cron:run" arguments="--group='index'" stepKey="secondRunToExecuteJobs"/>
         </after>
 
         <!--Verify configurable product on storefront.-->

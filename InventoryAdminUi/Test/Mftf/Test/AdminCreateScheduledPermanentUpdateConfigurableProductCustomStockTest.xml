@@ -68,6 +68,10 @@
                 <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
             </actionGroup>
             <deleteData createDataKey="stock" stepKey="deleteStock" before="amOnLogoutPage"/>
+
+            <!-- Reindex invalidated indices after product attribute has been created/deleted -->
+            <magentoCLI command="cron:run" arguments="--group='index'" stepKey="firstRunToScheduleJobs"/>
+            <magentoCLI command="cron:run" arguments="--group='index'" stepKey="secondRunToExecuteJobs"/>
         </after>
 
         <!--Assign source to configurable product.-->

@@ -96,6 +96,10 @@
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
             <magentoCLI command="config:set {{StorefrontDisableAddStoreCodeToUrls.path}} {{StorefrontDisableAddStoreCodeToUrls.value}}" stepKey="addStoreCodeToUrlDisable"/>
+
+            <!-- Reindex invalidated indices after product attribute has been created/deleted -->
+            <magentoCLI command="cron:run" arguments="--group='index'" stepKey="firstRunToScheduleJobs"/>
+            <magentoCLI command="cron:run" arguments="--group='index'" stepKey="secondRunToExecuteJobs"/>
         </after>
 
         <actionGroup ref="AdminOpenProductIndexPageActionGroup" stepKey="openProductGrid"/>
