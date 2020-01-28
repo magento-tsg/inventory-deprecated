@@ -87,6 +87,10 @@
             <!--Disable source.-->
             <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableSources"/>
             <actionGroup ref="logout" stepKey="logoutFromAdminArea"/>
+
+            <!-- Reindex invalidated indices after product attribute has been created/deleted -->
+            <magentoCLI command="cron:run" arguments="--group='index'" stepKey="firstRunToScheduleJobs"/>
+            <magentoCLI command="cron:run" arguments="--group='index'" stepKey="secondRunToExecuteJobs"/>
         </after>
 
         <!--Add configurable product to cart.-->

@@ -76,6 +76,10 @@
             <deleteData createDataKey="createSecondConfigProductAttribute" stepKey="deleteSecondConfigProductAttribute"/>
             <deleteData createDataKey="simpleCategory" stepKey="deleteCategory"/>
             <deleteData createDataKey="customer" stepKey="deleteCustomer"/>
+
+            <!-- Reindex invalidated indices after product attribute has been created/deleted -->
+            <magentoCLI command="cron:run" arguments="--group='index'" stepKey="firstRunToScheduleJobs"/>
+            <magentoCLI command="cron:run" arguments="--group='index'" stepKey="secondRunToExecuteJobs"/>
         </after>
 
         <!-- Create a configurable product -->
