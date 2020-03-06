@@ -15,4 +15,7 @@
     <type name="Magento\CatalogInventory\Helper\Stock">
         <plugin name="adapt_assign_stock_status_to_configurable_product" type="Magento\InventoryConfigurableProduct\Plugin\CatalogInventory\Helper\Stock\AdaptAssignStatusToProductPlugin"/>
     </type>
+    <type name="Magento\ConfigurableProduct\Controller\Product\GetQty">
+        <plugin name="configurable_option_qty_verification_by_stock" type="Magento\InventoryConfigurableProduct\Plugin\Controller\Product\GetQty"/>
+    </type>
 </config>
