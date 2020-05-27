@@ -58,6 +58,7 @@
                 <requiredEntity createDataKey="simpleProduct2"/>
                 <field key="qty">2</field>
             </createData>
+            <actionGroup ref="AdminReindexAndFlushCache" stepKey="reindexAndFlushCache"/>
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
         </before>
         <after>
@@ -71,6 +72,8 @@
             <deleteData createDataKey="category" stepKey="deleteCategory"/>
             <deleteData createDataKey="simpleProduct1" stepKey="simpleProduct1"/>
             <deleteData createDataKey="simpleProduct2" stepKey="simpleProduct2"/>
+            <!-- Reindex invalidated indices after product attribute has been created/deleted -->
+            <magentoCron groups="index" stepKey="reindexInvalidatedIndices"/>
         </after>
 
         <actionGroup ref="AdminGoToProductGridFilterResultsByInputEditProduct" stepKey="goToProductGridFilterResultsByInputEditProduct1">
@@ -81,6 +84,7 @@
         <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="fillProductQtyPerSource">
             <argument name="qty" value="{{twentyPiecesAddToCart.value}}" />
         </actionGroup>
+        <selectOption selector="{{AdminProductSourcesGrid.rowSourceItemStatusBySourceCode(_defaultSource.source_code)}}" userInput="In Stock" stepKey="fillSourceItemStatusForFirstProduct"/>
 
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct"/>
 
@@ -92,16 +96,13 @@
         <actionGroup ref="AdminFillSourceQtyOnProductEditPageActionGroup" stepKey="fillProductQtyPerSource2">
             <argument name="qty" value="{{twentyPiecesAddToCart.value}}" />
         </actionGroup>
+        <selectOption selector="{{AdminProductSourcesGrid.rowSourceItemStatusBySourceCode(_defaultSource.source_code)}}" userInput="In Stock" stepKey="fillSourceItemStatusForSecondProduct"/>
 
         <actionGroup ref="SaveProductFormActionGroup" stepKey="saveProduct2"/>
 
         <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginToStorefront">
             <argument name="Customer" value="$$customer$$"/>
         </actionGroup>
-
-        <!-- Perform reindex and flush cache -->
-        <magentoCLI command="indexer:reindex" stepKey="reindex"/>
-        <magentoCLI command="cache:flush" stepKey="flushCache"/>
 
         <amOnPage url="{{StorefrontProductPage.url($createBundleProduct.custom_attributes[url_key]$)}}" stepKey="navigateToBundleProductPage"/>
         <actionGroup ref="StorefrontAddBundleProductFromProductToCartActionGroup" stepKey="addProductToCart">
