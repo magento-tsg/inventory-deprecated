@@ -60,6 +60,7 @@
             </createData>
             <actionGroup ref="AdminReindexAndFlushCache" stepKey="reindexAndFlushCache"/>
             <actionGroup ref="AdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminCatalogPriceRuleDeleteAllActionGroup" stepKey="deleteAllCatalogPriceRule"/>
         </before>
         <after>
             <!--Disable additional source.-->
