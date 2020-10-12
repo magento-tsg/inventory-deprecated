@@ -64,38 +64,31 @@ class GetQty extends Action implements HttpGetActionInterface
         $sku = $this->getRequest()->getParam('sku');
         $salesChannel = $this->getRequest()->getParam('channel');
         $salesChannelCode = $this->getRequest()->getParam('salesChannelCode');
+        $resultJson = $this->resultPageFactory->create(ResultFactory::TYPE_JSON);
 
         if (!$sku || !$salesChannel) {
-            return $this->getResultForward();
+            $resultJson->setData(
+                [
+                    'qty' => null
+                ]
+            );
+        } else {
+            $stockId = $this->stockResolver->execute($salesChannel, $salesChannelCode)->getStockId();
+
+            try {
+                $qty = $this->productQty->execute($sku, (int)$stockId);
+            } catch (LocalizedException $e) {
+                $this->messageManager->addErrorMessage($e->getMessage());
+                $qty = null;
+            }
+
+            $resultJson->setData(
+                [
+                    'qty' => $qty
+                ]
+            );
         }
-
-        $stockId = $this->stockResolver->execute($salesChannel, $salesChannelCode)->getStockId();
-
-        try {
-            $qty = $this->productQty->execute($sku, (int)$stockId);
-        } catch (LocalizedException $e) {
-            $qty = null;
-        }
-
-        $resultJson = $this->resultPageFactory->create(ResultFactory::TYPE_JSON);
-        $resultJson->setData(
-            [
-                'qty' => $qty
-            ]
-        );
 
         return $resultJson;
-    }
-
-    /**
-     * Get result forward.
-     *
-     * @return ResultInterface
-     */
-    private function getResultForward(): ResultInterface
-    {
-        $resultForward = $this->resultPageFactory->create(ResultFactory::TYPE_FORWARD);
-        $resultForward->forward('noroute');
-        return $resultForward;
     }
 }
